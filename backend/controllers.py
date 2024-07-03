@@ -15,6 +15,7 @@ def user_login():
         usr = table_1.query.filter_by(user_name = uname,
                                       pwd=pwd).first()
         if usr != None and usr.role == 0:
+            pass
             
 
     return render_template("login.html")
