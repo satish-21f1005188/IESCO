@@ -1,0 +1,37 @@
+*{
+    margin : 0px;
+}
+#container,#panel{
+    border : 2px solid black
+}
+
+#panel{
+    width:80%;
+    margin: auto;
+    height: 700px;
+
+}
+#input-form{
+    border : 1px solid blue;
+    width : 600px;
+    height : 600px ;
+   
+    margin : auto ;
+    margin-top:50px;
+    border-radius : 20px;
+}
+
+#dashboard-details{
+    border : 1px solid blue;
+    width : 600px;
+    height : 600px ;
+   
+    margin : auto ;
+    margin-top:50px;
+    margin-left:400px;
+    border-radius : 20px;
+
+}
+.view-request{
+    border : 1px solid rgb(1, 1, 23);
+}
