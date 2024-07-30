@@ -21,17 +21,22 @@
     border-radius : 20px;
 }
 
-#dashboard-details{
-    border : 1px solid blue;
-    width : 600px;
-    height : 600px ;
-   
-    margin : auto ;
-    margin-top:50px;
-    margin-left:400px;
-    border-radius : 20px;
 
-}
 .view-request{
     border : 1px solid rgb(1, 1, 23);
 }
+
+.navbar-collapse-custom {
+    margin-left: 460px;
+     /* Adjust the value as needed */
+}
+
+#dashboard-tables{
+
+    margin-left: 10px;
+    margin-top: 50px;
+    
+    border-collapse: collapse;
+}
+
+#

@@ -4,24 +4,41 @@ from flask import current_app as app # current running app
 from .models import *
 @app.route("/")
 def home():
-    return render_template("login.html")
+    return render_template("new-login.html")
 
-@app.route("/login",methods=["GET",'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def user_login():
-    #return render_template("login.html")
+   
+    
     if request.method == "POST":
-        uname = request.form.get("uname")
-        pwd = request.form.get("pwd")
-        usr = user_table.query.filter_by(user_name = uname,
-                                      pwd=pwd).first()
-        if usr != None and usr.role == 0:
-            return render_template("admin-dashboard.html")
-        elif usr and usr.role == 1:
-            return render_template("inf-dashboard.html",influencer = usr.user_name)
-        else:
-            return render_template("login.html",msg ="Invalid Credentials")    
+            uname = request.form.get("uname")
+            pwd = request.form.get("pwd")
+            
+            # Query the database for the user
+            usr = user_table.query.filter_by(user_name=uname, pwd=pwd).first()
+            
+            if usr:
+                if usr.role == 0:
+                    # Admin user
+                    campaigns_list = get_campaigns()
+                    user_list = get_users()
+                    return render_template("admin-dashboard.html", campaigns_list=campaigns_list, user_list=user_list)
+                elif usr.role == 1:
+                    # Influencer user
+                    return render_template("inf-dashboard.html", influencer=usr.user_name)
+                elif usr.role == 2:
+                    # Sponsor user
+                    return render_template("spo-dashboard.html", sponsor=usr.user_name)
+            
+            # If user not found or roles are not defined, handle login failure
+            else:
+                msg = 'Login failed. Please check your credentials.'
+                return render_template("new-login.html", msg=msg)
 
-    return render_template("login.html",msg ="")
+    if request.method == "GET":
+    
+        # Render the login page with the appropriate message
+        return render_template("new-login.html",msg = "")
 
 @app.route("/inf_register",methods=["GET","POST"])
 def inf_signup():
@@ -83,3 +100,32 @@ def spo_signup():
             else:
                     return render_template("spo-signup.html",msg = "user is already existing . kindly sign in")
     return render_template("spo-signup.html",msg = "")
+
+
+@app.route("/all_users",methods=["GET","POST"])
+def all_users():
+    user_list = get_users()
+    return render_template("admin-all-users.html",user_list = user_list)
+
+
+
+
+
+
+
+# getter functions
+def get_campaigns():
+    campaigns_list=campaigns.query.all()
+    campaigns_dict={}
+    for campaign in campaigns_list:
+        if campaign.id not in campaigns_dict.keys():
+            campaigns_dict[campaign.id]=[campaign.campaign_name,campaign.campaign_desc,campaign.campaign_status,campaign.campaign_budget,campaign.campaign_start_date,campaign.campaign_end_date]
+    return campaigns_dict
+
+def get_users():
+    users = user_table.query.all()
+    users_dict = {}
+    for user in users:
+        if user.id not in users_dict.keys():
+            users_dict[user.id] = [user.email,user.full_name,user.user_name,user.role]
+    return users_dict
