@@ -39,4 +39,7 @@
     border-collapse: collapse;
 }
 
-#
+.table-flagged {
+    background-color: #f8d7da;
+  }
+  

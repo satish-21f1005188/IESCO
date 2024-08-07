@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <title>Sponsor Dashboard</title>
+    
+</head>
+<body>
+    <div id = "container">
+        <div id = "panel">
+            <!-- Display Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" style="font-size:21px;" href="#">{{ sponsor_info[id][1] }}'s Dashboard</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav" style="font-size:20px;">
+                            <li class="nav-item" style="margin-left: 290px">
+                                <a class="nav-link active" aria-current="page" href="">Profile |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/sponsor/campaigns/{{id}}">Your Campaigns |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/sponsor//new_campaign/{{id}}">Create a Campaign |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Find |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Stats |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/login">Logout |</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="d-flex flex-column align-items-center" style="margin-top: 20px;">
+                <h2>Create New Campaign</h2>
+                <a href="/path/to/your/create-campaign" class="btn btn-success btn-lg mt-2" data-bs-toggle="modal" data-bs-target="#newCampaignModal"> 
+                    <i class="bi bi-plus"></i> <!-- Bootstrap Icons add symbol -->
+                    Create
+                </a>
+            </div>
+            
+            <!-- Bootstrap Icons CDN -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        </div>
+    </div>
+    <!--Add new campaign model-->
+    
+   
+     <!-- Create Campaign Modal -->
+     <div class="modal fade" id="newCampaignModal" tabindex="-1" aria-labelledby="createCampaignModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCampaignModalLabel">New Campaign</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/sponsor/create_campaign/{{id}}" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="campaignName" class="form-label">Campaign Name</label>
+                            <input type="text" class="form-control" id="campaignName" name="campaignName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="campaignDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="campaignDescription" name="campaignDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="campaignBudget" class="form-label">Budget</label>
+                            <input type="number" class="form-control" id="campaignBudget" name="campaignBudget" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="campaignStartDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="campaignStartDate" name="campaignStartDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="campaignEndDate" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="campaignEndDate" name="campaignEndDate" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+   
+    
+    <!-- <script>
+        // <!--Script for adding new campaign-->
+        var newCampaignModal = document.getElementById('newCampaignModal')
+        newCampaignModal.addEventListener('show.bs.modal', function (event) {
+          var button = event.relatedTarget
+          var recipient = button.getAttribute('data-bs-whatever')
+          var modalName = newCampaignModal.querySelector('#modalName')
+          var modalDescription = newCampaignModal.querySelector('#modalDescription')
+    
+          modal.textContent = 'New message to ' + recipient
+          modalBodyInput.value = recipient
+        })
+    </script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

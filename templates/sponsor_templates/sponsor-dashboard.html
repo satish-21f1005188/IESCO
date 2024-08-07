@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Sponsor Dashboard</title>
+</head>
+<body>
+    <div id="container">
+        <div id="panel">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" style="font-size:21px;" href="#">{{sponsor}}'s Dashboard</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav" style="font-size:20px;">
+                            <li class="nav-item" style = "margin-left:500px">
+                                <a class="nav-link active" aria-current="page" href="/sponsor/profile/{{id}}">Profile |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/sponsor/campaigns/{{id}}">Your Campaigns |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Find |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Stats |</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/login">Logout |</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div style="margin-top: 20px; font-size: 20px; margin-left: 10px; text-align: center;">
+                Welcome, {{sponsor}}!
+            </div>
+            <div style="margin-top: 40px; margin-left: 13px; font-size: 20px;">
+                All Active Campaigns
+                
+                <div id="dashboard-tables" style="width: 800px;">
+                    {% if campaigns_list %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Campaign Name</th>
+                                    <th scope="col">Sponsored by</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in campaigns_list.items() %}
+                                    {% if value[3] == 1 %}
+                                        <tr>
+                                            <th scope="row"></th>
+                                            <td>{{ value[0] }}</td>
+                                            <td>{{ users_list[value[1]][1] }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ users_list[value[1]][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}">
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <h2>No Campaigns available</h2>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel">Campaign Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Campaign Name:</strong> <span id="modalCampaignName"></span></p>
+                    <p><strong>Sponsored by:</strong> <span id="modalSponsorName"></span></p>
+                    <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+                    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                    <p><strong>Budget:</strong> <span id="modalBudget"></span></p>
+                    <p><strong>Start Date:</strong> <span id="modalStartDate"></span></p>
+                    <p><strong>End Date:</strong> <span id="modalEndDate"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+    <script>
+        // Script for view modal
+        var viewModal = document.getElementById('viewModal');
+        viewModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            
+            var name = button.getAttribute('data-name');
+            var sponsor = button.getAttribute('data-sponsor');
+            var description = button.getAttribute('data-desc');
+            var status = button.getAttribute('data-status');
+            var budget = button.getAttribute('data-budget');
+            var start_date = button.getAttribute('data-start');
+            var end_date = button.getAttribute('data-end');
+            
+            var modalCampaignName = viewModal.querySelector('#modalCampaignName');
+            var modalSponsorName = viewModal.querySelector('#modalSponsorName');
+            var modalDescription = viewModal.querySelector('#modalDescription');
+            var modalStatus = viewModal.querySelector('#modalStatus');
+            var modalBudget = viewModal.querySelector('#modalBudget');
+            var modalStartDate = viewModal.querySelector('#modalStartDate');
+            var modalEndDate = viewModal.querySelector('#modalEndDate');
+            
+            modalCampaignName.textContent = name;
+            modalSponsorName.textContent = sponsor;
+            modalDescription.textContent = description;
+            modalStatus.textContent = status;
+            modalBudget.textContent = budget;
+            modalStartDate.textContent = start_date;
+            modalEndDate.textContent = end_date;
+        });
+    </script>
+</body>
+</html>

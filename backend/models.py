@@ -10,6 +10,7 @@ class user_table(db.Model):
     user_name = db.Column(db.String, nullable=False)
     pwd = db.Column(db.String, nullable=False)
     role = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Integer,nullable = False,default = 1)
     # Relationship to Influencers and Sponsors
     user_influencer = db.relationship("influencers", backref="user")
     user_sponsor = db.relationship("sponsors", backref="user")

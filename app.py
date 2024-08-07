@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask,render_template,session
 from backend.models import *
 
 
@@ -13,7 +13,11 @@ def init_app():
     
 
 app = init_app()
+app.secret_key = '5#y2L"F4Q8z\n\xec]/'
+
 from backend.controllers import *
+from backend.sponsor_controllers import *
+from backend.manage_ad_requests import *
 
 if __name__ == '__main__':
     app.run(debug=True)

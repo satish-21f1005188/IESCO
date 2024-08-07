@@ -13,6 +13,17 @@
 </head>
 <body>
     <div class="container">
+         <!-- Display Flash Messages -->
+         {% with messages = get_flashed_messages(with_categories=true) %}
+         {% if messages %}
+             {% for category, message in messages %}
+                 <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                     {{ message }}
+                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                 </div>
+             {% endfor %}
+         {% endif %}
+         {% endwith %}
         <div class="row justify-content-center">
             <div class="col-md-3">
                 <h3 class="text-center mt-5">Login</h3>
@@ -66,7 +77,11 @@
                             </div>
                         {% endif %}
                     {% endif %} -->
-                    {{msg}}
+                    {% if msg == "failed" %}
+                        <div class="alert alert-danger" role="alert">
+                            <p>Login failed. Please check your credentials.</p>
+                        </div>
+                    {% endif %}
                 </div>  
                 </div>
             </div>

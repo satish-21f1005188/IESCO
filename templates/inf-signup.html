@@ -12,6 +12,18 @@
         <div id = "panel">
             <div id = "input-form">
             <h1>Influencer Registration Page</h1>
+
+            <!-- Display Flash Messages -->
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                  {% for category, message in messages %}
+                      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                          {{ message }}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                  {% endfor %}
+              {% endif %}
+              {% endwith %}
             <form action = "/inf_register" method = "POST">
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Full Name</label>
