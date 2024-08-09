@@ -30,7 +30,7 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav" style="font-size:20px;">
-                            <li class="nav-item" style="margin-left: 290px">
+                            <li class="nav-item" style="margin-left: 200px">
                                 <a class="nav-link active" aria-current="page" href="/sponsor/profile/{{id}}">Profile |</a>
                             </li>
                             <li class="nav-item">
@@ -39,12 +39,11 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/sponsor/new_campaign/{{id}}">Create a Campaign |</a>
                             </li>
+                            
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Find |</a>
+                                <a class="nav-link active" aria-current="page" href="/sponsor/search/{{id}}">Search |</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Stats |</a>
-                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/login">Logout |</a>
                             </li>
@@ -62,7 +61,7 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col"></th>
+                                    
                                     <th scope="col">Campaign Name</th>
                                     <th scope="col">Actions</th>
                                     <th scope = "col">Manage Ad Requests</th>
@@ -73,14 +72,14 @@
                                 {% for key, value in campaigns_list.items() %}
                                     {% if value[3] == 1 %}
                                         <tr>
-                                            <th scope="row"></th>
+                                            
                                             <td>{{ value[0] }}</td>
                                             <td>
                                                 <div style="text-align: center;">
-                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ sponsor_info[id][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ sponsor_info[id][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}" data-category = "{{ value[7]}}">
                                                         View
                                                     </button>
-                                                    <button type="button" class="btn btn-primary" style="background-color: rgba(242, 231, 161, 0.985); color: black" data-bs-toggle="modal" data-bs-target="#editCampaignModal" data-val="{{key}}#{{value[0]}}#{{value[2]}}#{{value[3]}}#{{value[4]}}#{{value[5]}}#{{value[6]}}">
+                                                    <button type="button" class="btn btn-primary" style="background-color: rgba(242, 231, 161, 0.985); color: black" data-bs-toggle="modal" data-bs-target="#editCampaignModal" data-val="{{key}}#{{value[0]}}#{{value[2]}}#{{value[3]}}#{{value[4]}}#{{value[5]}}#{{value[6]}}#{{value[7]}}">
                                                         Edit
                                                     </button>
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCampaignModal" data-id="{{ key }}" data-name="{{value[0]}}" data-description="{{ value[2] }}">
@@ -89,7 +88,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <a href="/sponsor/manage_ad_requests/{{key}}" class="btn btn-primary">Manage</a>
+                                                <a href="/sponsor/manage_requests/{{key}}" class="btn btn-primary">Manage</a>
                                             </td>
                                             <td>
                                                 {% if days_left_list[key] < 0 %}
@@ -114,16 +113,16 @@
             <!--Campaigns Flagged by the admin-->
 
 
-            <div style="margin-top: 20px; font-size: 20px; margin-left: 10px; ">
-                <div style="align-self: center;text-align: center">
+            <div style="margin-top: 20px; font-size: 20px; margin-left: 10px; text-align: center;">
+                <!-- <div style="align-self: center;text-align: center"> -->
                 Campaigns flagged by the admin
-                </div>
-                <div id="dashboard-tables" style="width: 800px;margin-left: 0px;">
-                    {% if campaigns_list %}
+                <!-- </div> -->
+                <div id="dashboard-tables" style="width: 1000px;">
+                    {% if flagged_campaigns_list %}
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col"></th>
+                                    
                                     <th scope="col">Campaign Name</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -132,10 +131,10 @@
                                 {% for key, value in campaigns_list.items() %}
                                     {% if value[3] == 0 %}
                                         <tr>
-                                            <th scope="row"></th>
+                                            
                                             <td>{{ value[0] }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ sponsor_info[id][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ sponsor_info[id][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}" data-category = "{{ value[7]}}">
                                                     View
                                                 </button>
                                             </td>
@@ -145,12 +144,11 @@
                             </tbody>
                         </table>
                     {% else %}
-                        <h2>No Campaigns available</h2>
+                        <h2>No Flagged Campaigns available</h2>
                     {% endif %}
                 </div>
-                <br>
-                <br>
-            </div> 
+            </div>
+            
                 <!-- View Modal -->
                 <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -163,6 +161,7 @@
                             <div class="modal-body">
                                 <p><strong>Campaign Name:</strong> <span id="modalCampaignName"></span></p>
                                 <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+                                <p><strong>Category:</strong><span id = "modalCategory"></span></p>
                                 <p><strong>Status:</strong> 
                                     <span id="modalStatus">
                                         <span id="statusDot" style="display: none;">●</span>
@@ -199,6 +198,17 @@
                     <div class="mb-3">
                         <label for="editCampaignDescription" class="form-label">Description</label>
                         <textarea class="form-control" id="editCampaignDescription" name="editCampaignDescription" rows="3" required></textarea>
+                    </div>
+                    <div class = "mb-3">
+                        <label for="editCampaignCategory" class="form-label">Category</label>
+                        <select class="form-select" id="editCampaignCategory" name="editCampaignCategory" required>
+                            <option selected>Choose a category</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Beauty & Cosmetic">Beauty & Cosmetics</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Fitness">Fitness</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="editCampaignBudget" class="form-label">Budget</label>
@@ -265,6 +275,7 @@
             var budget = button.getAttribute('data-budget');
             var start_date = button.getAttribute('data-start');
             var end_date = button.getAttribute('data-end');
+            var category = button.getAttribute('data-category');
 
             var modalCampaignName = viewModal.querySelector('#modalCampaignName');
             var modalDescription = viewModal.querySelector('#modalDescription');
@@ -274,13 +285,14 @@
             var modalBudget = viewModal.querySelector('#modalBudget');
             var modalStartDate = viewModal.querySelector('#modalStartDate');
             var modalEndDate = viewModal.querySelector('#modalEndDate');
+            var modalCategory = viewModal.querySelector('#modalCategory');
 
             modalCampaignName.textContent = name;
             modalDescription.textContent = description;
             modalBudget.textContent = budget;
             modalStartDate.textContent = start_date;
             modalEndDate.textContent = end_date;
-
+            modalCategory.textContent = category;
             // Set the status display based on modalStatus
             if (status == 1) {
                 statusDot.style.display = 'inline';
@@ -332,9 +344,12 @@
         var budget = values[4];
         var start_date = values[5];
         var end_date = values[6];
+        var category = values[7];
+        console.log(values);
 
         document.getElementById('editCampaignId').value = campaignId;
         document.getElementById('editCampaignName').value = name;
+        document.getElementById('editCampaignCategory').value = category;
         document.getElementById('editCampaignDescription').value = description;
         document.getElementById('editCampaignBudget').value = budget;
         document.getElementById('editCampaignStartDate').value = start_date;

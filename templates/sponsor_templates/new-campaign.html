@@ -31,8 +31,8 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav" style="font-size:20px;">
-                            <li class="nav-item" style="margin-left: 290px">
-                                <a class="nav-link active" aria-current="page" href="">Profile |</a>
+                            <li class="nav-item" style = "margin-left : 200px">
+                                <a class="nav-link active" aria-current="page" href="/sponsor/profile/{{id}}">Profile |</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/sponsor/campaigns/{{id}}">Your Campaigns |</a>
@@ -41,11 +41,9 @@
                                 <a class="nav-link active" aria-current="page" href="/sponsor//new_campaign/{{id}}">Create a Campaign |</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Find |</a>
+                                <a class="nav-link active" aria-current="page" href="/sponsor/search/{{id}}">Search |</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Stats |</a>
-                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/login">Logout |</a>
                             </li>
@@ -85,6 +83,17 @@
                         <div class="mb-3">
                             <label for="campaignDescription" class="form-label">Description</label>
                             <textarea class="form-control" id="campaignDescription" name="campaignDescription" rows="3" required></textarea>
+                        </div>
+                        <div class = "mb-3">
+                            <label for="campaignCategory" class="form-label">Category</label>
+                            <select class="form-select" id="campaignCategory" name="campaignCategory" required>
+                                <option selected>Choose a category</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Technology">Technology</option>
+                                <option value="Beauty & Cosmetic">Beauty & Cosmetics</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Fitness">Fitness</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="campaignBudget" class="form-label">Budget</label>

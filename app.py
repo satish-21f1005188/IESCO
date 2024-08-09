@@ -18,6 +18,7 @@ app.secret_key = '5#y2L"F4Q8z\n\xec]/'
 from backend.controllers import *
 from backend.sponsor_controllers import *
 from backend.manage_ad_requests import *
+from backend.influencer_controllers import *
 
 if __name__ == '__main__':
     app.run(debug=True)

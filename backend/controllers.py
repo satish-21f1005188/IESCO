@@ -29,7 +29,7 @@ def user_login():
                         return redirect(url_for("user_login"))
                     # Influencer user
                     else:
-                        return render_template("inf-dashboard.html", influencer=usr.user_name ,id = usr.id)
+                        return redirect(url_for("influencer_profile",user_id = usr.id))
                 elif usr.role == 2:
                     # Sponsor user
                     return render_template("./sponsor_templates/sponsor-dashboard.html", sponsor=usr.user_name , id = usr.id ,campaigns_list=campaigns_list, users_list=user_list)
@@ -135,7 +135,7 @@ def get_campaigns():
     campaigns_dict={}
     for campaign in campaigns_list:
         if campaign.id not in campaigns_dict.keys():
-            campaigns_dict[campaign.id]=[campaign.campaign_name,campaign.sponsor_id,campaign.campaign_desc,campaign.campaign_status,campaign.campaign_budget,campaign.campaign_start_date,campaign.campaign_end_date]
+            campaigns_dict[campaign.id]=[campaign.campaign_name,campaign.sponsor_id,campaign.campaign_desc,campaign.campaign_status,campaign.campaign_budget,campaign.campaign_start_date,campaign.campaign_end_date,campaign.campaign_category]
     return dict(campaigns_dict)
 
 def get_users():
