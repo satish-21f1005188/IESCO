@@ -1,7 +1,8 @@
-from flask import Flask,render_template,request,flash,redirect,url_for
+from flask import Flask, jsonify,render_template,request,flash,redirect,url_for
 
 from flask import current_app as app # current running app
 from .models import *
+
 @app.route("/")
 def home():
     return render_template("new-login.html")
@@ -22,17 +23,23 @@ def user_login():
                 if usr.role == 0:
                     # Admin user
                     
-                    return render_template("admin-dashboard.html", id = usr.id, campaigns_list=campaigns_list, user_list=user_list)
+                    return redirect(url_for("admin_stats"))
                 elif usr.role == 1:
                     if usr.status == 0:
                         flash("Your Account is Flagged . Kindly Contact Admin" , 'danger')
                         return redirect(url_for("user_login"))
                     # Influencer user
                     else:
+                        
                         return redirect(url_for("influencer_profile",user_id = usr.id))
                 elif usr.role == 2:
                     # Sponsor user
-                    return render_template("./sponsor_templates/sponsor-dashboard.html", sponsor=usr.user_name , id = usr.id ,campaigns_list=campaigns_list, users_list=user_list)
+                    if usr.status == 0:
+                        flash("Your Account is Flagged . Kindly Contact Admin" , 'danger')
+                        return redirect(url_for("user_login"))
+                    # Influencer user
+                    else:
+                        return redirect(url_for("sponsor_profile",user_id = usr.id))
             
             # If user not found or roles are not defined, handle login failure
             else:
@@ -115,7 +122,7 @@ def all_users():
     user_list = get_users()
     influencers_list = get_influencers()
     sponsors_list = get_sponsors()
-    return render_template("admin-all-users.html",user_list = user_list , sponsors_list = sponsors_list ,influencers_list = influencers_list)
+    return render_template("admin_templates/admin-all-users.html",user_list = user_list , sponsors_list = sponsors_list ,influencers_list = influencers_list)
 
 # all-campaigns template
 @app.route("/all_campaigns")
@@ -123,7 +130,7 @@ def all_campaigns():
     campaigns_list = get_campaigns()
     sponsors_list = get_sponsors()
     users_list = get_users()
-    return render_template("admin-all-campaigns.html",campaigns_list = campaigns_list,sponsors_list = sponsors_list,users_list = users_list)
+    return render_template("admin_templates/admin-all-campaigns.html",campaigns_list = campaigns_list,sponsors_list = sponsors_list,users_list = users_list)
 
 
 
@@ -135,7 +142,7 @@ def get_campaigns():
     campaigns_dict={}
     for campaign in campaigns_list:
         if campaign.id not in campaigns_dict.keys():
-            campaigns_dict[campaign.id]=[campaign.campaign_name,campaign.sponsor_id,campaign.campaign_desc,campaign.campaign_status,campaign.campaign_budget,campaign.campaign_start_date,campaign.campaign_end_date,campaign.campaign_category]
+            campaigns_dict[campaign.id]=[campaign.campaign_name,campaign.sponsor_id,campaign.campaign_desc,campaign.campaign_status,campaign.campaign_budget,campaign.campaign_start_date,campaign.campaign_end_date,campaign.campaign_category,campaign.campaign_visibility]
     return dict(campaigns_dict)
 
 def get_users():
@@ -182,6 +189,11 @@ def flag_user(user_id):
         if usr:
             # Flag the user
             usr.status = 0
+            if usr.role == 2:
+                campaigns_list = campaigns.query.filter_by(sponsor_id=user_id).all()
+                for campaign in campaigns_list:
+                    campaign.campaign_status = 0
+                    
             db.session.commit()
             flash('User has been flagged successfully!', 'danger')
         else:
@@ -204,6 +216,10 @@ def revoke_user(user_id):
         if usr:
             # Flag the user
             usr.status = 1
+            if usr.role == 2:
+                campaigns_list = campaigns.query.filter_by(sponsor_id=user_id).all()
+                for campaign in campaigns_list:
+                    campaign.campaign_status = 1
             db.session.commit()
             flash('User has been revoked successfully!', 'success')
         else:
@@ -249,6 +265,61 @@ def revoke_campaign(campaign_id):
             flash('Campaign not found.', 'danger')
         return redirect(url_for('all_campaigns'))
     return redirect(url_for('all_campaigns'))
+
+
+# admin stats
+
+def get_user_data():
+    user_roles = db.session.query(user_table.role, db.func.count(user_table.id)).group_by(user_table.role).all()
+    user_roles_list = [{"role": role, "count": count} for role, count in user_roles if role in [ 1, 2]]
+    return user_roles_list  # Return as a list of dictionaries
+
+def get_campaign_data():
+    campaign_status = db.session.query(campaigns.campaign_status, db.func.count(campaigns.id)).group_by(campaigns.campaign_status).all()
+    campaign_status_list = [{"status": status, "count": count} for status, count in campaign_status]
+    return campaign_status_list  # Return as a list of dictionaries
+
+def get_campaign_by_category():
+    campaign_category = db.session.query(campaigns.campaign_category, db.func.count(campaigns.id)).group_by(campaigns.campaign_category).all()
+    campaign_category_list = [{"category": category, "count": count} for category, count in campaign_category]
+    return campaign_category_list  # Return as a list of dictionaries
+
+def total_users():
+    total_users = user_table.query.count()
+    return total_users
+
+def total_campaigns():
+    total_campaigns = campaigns.query.count()
+    return total_campaigns
+
+def total_influencers():
+
+    total_influencers = influencers.query.count()
+    return total_influencers
+
+def total_sponsors():   
+    total_sponsors = sponsors.query.count()
+    return total_sponsors
+
+def total_active_users():
+    total_active_users = user_table.query.filter_by(status=1).count()
+    return total_active_users
+
+def total_active_campaigns():
+    total_active_campaigns = campaigns.query.filter_by(campaign_status=1).count()
+    return total_active_campaigns
+@app.route("/admin_stats")
+def admin_stats():
+    user_data = get_user_data()
+    campaign_data = get_campaign_data()
+    campaign_by_category_data = get_campaign_by_category()
+    inf_spo_ratio = round(total_influencers() / total_sponsors(), 1)
+    return render_template("admin_templates/admin-dashboard.html", user_data=user_data,campaign_data=campaign_data,campaign_category_data=campaign_by_category_data
+                           ,total_users=total_users(),total_campaigns=total_campaigns(),
+                           total_influencers=total_influencers(),total_sponsors=total_sponsors(),
+                           total_active_users=total_active_users(),total_active_campaigns=total_active_campaigns(),
+                           inf_spo_ratio = inf_spo_ratio)
+
 
 
 

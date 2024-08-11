@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin's Dashboard - All Campaigns</title>
+    <!-- <link rel="stylesheet" href="/static/style.css"> -->
+    <link rel = "stylesheet" href = "/static/admin_dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="panel">
+
+          <!-- Display Flash Messages -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              {% endfor %}
+          {% endif %}
+          {% endwith %}
+          
+          <div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <div class="container-fluid">
+                <a class="navbar-brand" style="font-size: 21px;" href="#">Admin's Dashboard - All Campaigns</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                  <ul class="navbar-nav" style="font-size: 20px;">
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="/all_users">All Users</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="/all_campaigns">All Campaigns</a>
+                    </li>
+                   
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="/admin_stats">Stats</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="/login">Logout</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          </div>
+              
+          <!-- <div style="margin-top: 40px; margin-left: 13px; font-size: 20px;"> -->
+            <div class="text-center" style = "margin-top : 20px">
+              <h2><strong>All Campaigns</strong></h2>
+            </div>
+            <div id="dashboard-tables" class="table-responsive" style="width: 800px; margin: 20px auto;margin-top : 30px">
+              {% if campaigns_list %}
+              <table class="table table-hover align-middle table-custom" style="border: none;">
+                <thead class="table-light">
+                  <tr style="border-bottom: 2px solid #dee2e6;">
+                    <th scope="col" style="border: none;"><b></b></th>
+                    <th scope="col" style="border: none;"><b>Campaign Name</b></th>
+                    <th scope="col" style="border: none;"><b>Sponsored by</b></th>
+                    <th scope="col" style="border: none;"><b>Status</b></th>
+                    <th scope="col" class="text-center" style="border: none;"><span><b>Actions</b></span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for key, value in campaigns_list.items() %}
+                  <tr>
+                    <td style="border: none;">
+                      {% if value[3] == 0 %}
+                          <span style="color: red;">⚠️ </span>
+                      {% elif value[3] == 1 %}
+                          <span style="color: green;">✅ </span>
+                      {% else %}
+                          <span style="color: red;">&#10060; </span>
+                      {% endif %}
+                  </td>
+                    <td style="border: none;">{{ value[0] }}</td>
+                    <td style="border: none;">{{ users_list[value[1]][1] }}</td>
+                    {% if value[3] == 0 %}
+                      <td style="color: red; border: none;">&bull; Flagged</td>
+                    {% elif value[3] == 1 %}
+                      <td style="color: green; border: none;">&bull; Active</td>
+                    {% else %}
+                      <td style="color: red; border: none;">&bull; Ended</td>
+                    {% endif %}
+                    <td class="text-center" style="border: none;">
+                      <!-- View Button -->
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ users_list[value[1]][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}">
+                        View
+                      </button>
+          
+                      <!-- Flag Button -->
+                      <button 
+                        type="button" 
+                        class="btn btn-danger" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal" 
+                        data-id="{{ key }}" 
+                        data-name="{{ value[0] }}" 
+                        data-sponsor="{{ users_list[value[1]][1] }}" 
+                        {% if value[3] == 0 %}disabled aria-label="Flag {{ value[0] }} (disabled)" {% else %} aria-label="Flag {{ value[0] }}"{% endif %}>
+                        Flag
+                      </button>
+          
+                      <!-- Revoke Button -->
+                      <button type="button" class="btn btn-warning" style="background-color: rgb(220, 233, 117); color: black;" data-bs-toggle="modal" data-bs-target="#revokeModal" data-id="{{ key }}" data-name="{{ value[0] }}" data-sponsor="{{ users_list[value[1]][1] }}" {% if value[3] == 1 %}disabled{% endif %}>
+                        Revoke
+                      </button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <h2>No Campaigns available</h2>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- View Modal -->
+          <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="viewModalLabel">Campaign Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                  <p><strong>Campaign Name:</strong> <span id="modalCampaignName"></span></p>
+                  <p><strong>Sponsored by:</strong> <span id="modalSponsorName"></span></p>
+                  <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+                  <!-- <p><strong>Status:</strong> <span id="modalStatus"></span></p> -->
+                  <p><strong>Budget:</strong> <span id="modalBudget"></span></p>
+                  <p><strong>Start Date:</strong> <span id="modalStartDate"></span></p>
+                  <p><strong>End Date:</strong> <span id="modalEndDate"></span></p>
+                </div>
+                
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flag Modal -->
+          <form action="/all_campaigns/flag_campaign/{{ id }}" method="POST" id="flagForm">
+            <div class="modal fade" id="flagModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Flag this campaign?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  
+                  <div class="modal-body">
+                    <p><strong>Name:</strong> <span id="modalCampaignName"></span></p>
+                    <p><strong>Sponsored By:</strong> <span id="modalSponsorName"></span></p>
+                  </div>
+                  
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Flag</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- Revoke Modal -->
+          <form action="/all_campaigns/revoke_campaign/{{ id }}" method="POST" id="revokeForm">
+            <div class="modal fade" id="revokeModal" tabindex="-1" aria-labelledby="revokeModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="revokeModalLabel">Revoke this campaign?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  
+                  <div class="modal-body">
+                    <p><strong>Name:</strong> <span id="revokeModalCampaignName"></span></p>
+                    <p><strong>Sponsored by:</strong> <span id="revokeModalSponsorName"></span></p>
+                  </div>
+                  
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Revoke</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+  
+          </div>
+        </div>
+      
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        
+        <script>
+          // Script for view modal
+          var viewModal = document.getElementById('viewModal');
+          viewModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            
+            var name = button.getAttribute('data-name');
+            var sponsor = button.getAttribute('data-sponsor');
+            var description = button.getAttribute('data-desc');
+            var status = button.getAttribute('data-status');
+            var budget = button.getAttribute('data-budget');
+            var start_date = button.getAttribute('data-start');
+            var end_date = button.getAttribute('data-end');
+            
+            var modalCampaignName = viewModal.querySelector('#modalCampaignName');
+            var modalSponsorName = viewModal.querySelector('#modalSponsorName');
+            var modalDescription = viewModal.querySelector('#modalDescription');
+            // var modalStatus = viewModal.querySelector('#modalStatus');
+            var modalBudget = viewModal.querySelector('#modalBudget');
+            var modalStartDate = viewModal.querySelector('#modalStartDate');
+            var modalEndDate = viewModal.querySelector('#modalEndDate');
+            
+            modalCampaignName.textContent = name;
+            modalSponsorName.textContent = sponsor;
+            modalDescription.textContent = description;
+            // modalStatus.textContent = status;
+            modalBudget.textContent = budget;
+            modalStartDate.textContent = start_date;
+            modalEndDate.textContent = end_date;
+          });
+  
+          // Script for flag modal
+          var flagModal = document.getElementById('flagModal');
+          flagModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
+            var name = button.getAttribute('data-name');
+            var sponsor = button.getAttribute('data-sponsor');
+            
+            var modalCampaignName = flagModal.querySelector('#modalCampaignName');
+            var modalSponsorName = flagModal.querySelector('#modalSponsorName');
+            modalCampaignName.textContent = name;
+            modalSponsorName.textContent = sponsor;
+            
+            var form = document.getElementById('flagForm');
+            form.action = "/all_campaigns/flag_campaign/" + id;
+          });
+  
+          // Script for revoke modal
+          var revokeModal = document.getElementById('revokeModal');
+          revokeModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
+            var name = button.getAttribute('data-name');
+            var sponsor = button.getAttribute('data-sponsor');
+  
+            var modalCampaignName = revokeModal.querySelector('#revokeModalCampaignName');
+            var modalSponsorName = revokeModal.querySelector('#revokeModalSponsorName');
+            modalCampaignName.textContent = name;
+            modalSponsorName.textContent = sponsor;
+  
+            var form = document.getElementById('revokeForm');
+            form.action = "/all_campaigns/revoke_campaign/" + id;
+          });
+        </script>
+    
+      </div>
+    </div>
+  </body>
+  </html>
+  

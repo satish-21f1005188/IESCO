@@ -5,7 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Open Campaigns</title>
     <style>
-        .card {
+    .body {
+            background-color: #f8f9fa;
+        }
+    .container {
+            padding: 20px;
+        }
+    .panel {
+            background: rgb(255, 255, 255);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+    .h2 {
+            margin-top: 20px;
+            text-align: center;
+        }
+    .table-custom {
+            margin-top: 20px;
+        }
+    .btn-group {
+            margin-right: 5px;
+        }
+    .card {
     width: 270px;
     height: 400px;
     margin: 10px;
@@ -15,27 +37,26 @@
     overflow: hidden;
     background-color: #f9f9f9;
 }
-
-.card-body {
+    .card-body {
     padding: 15px;
 }
 
-.card-text {
+    .card-text {
     margin-bottom: 10px;
     font-size: 14px;
     color: #333;
 }
 
-.card:hover {
+    .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.card p {
+    .card p {
     text-align: left;
 }
 
-.card .btn {
+    .card .btn {
     background-color: #f2e7a1;
     color: black;
     font-weight: bold;
@@ -43,17 +64,17 @@
     transition: background-color 0.3s ease;
 }
 
-.card .btn:hover {
+    .card .btn:hover {
     background-color: #e5d68d;
     color: black;
 }
 
-.card .disabled {
+    .card .disabled {
     opacity: 0.9;
     pointer-events: none;
 }
 
-.card-text.center {
+    .card-text.center {
     text-align: center;
     font-size: 16px;
     font-weight: bold;
@@ -79,7 +100,7 @@
             {% endwith %}
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand" style="font-size:21px;" href="#">{{ influencer_info[id][0] }}'s Dashboard</a>
+                    <a class="navbar-brand" style="font-size:21px;" href="#">{{ influencer_info[id][0] }}'s Page</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -113,13 +134,15 @@
                     <div class="input-group mb-3" style="width: 500px;">
                         
                         <select class="form-select" aria-label="Default select example" name="category" style="margin-left:10px;margin-right:10px">
-                            <option selected>Choose a category</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Technology">Technology</option>
-                            <option value="Beauty & Cosmetic">Beauty & Cosmetics</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Fitness">Fitness</option>
-                            <option value="Food">Food</option>
+                            <option selected disabled>Choose a category</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Technology">Technology</option>
+                                <option value="Beauty & Cosmetic">Beauty & Cosmetics</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Fitness">Fitness</option>
+                                <option value="Food & Beverage">Food & Beverage</option>
+                                <option value = "Sports">Sports</option>
+                                <option value = "Travel">Travel</option>
                         </select>
                         <button class="btn btn-outline-secondary" type="submit" id="button-addon2" style="margin-left:10px">Search</button>
                     </div>
@@ -133,7 +156,7 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 20px;">
                             <div class="card" style="width: 270px; height: 400px;">
                                 <div class="card-body">
-                                    {% if value[8] == "Ad Requested" %} 
+                                    {% if value[9] == "Ad Requested" %} 
                                         <p class="card-text" style="color: green; font-size: 20px; text-align: center;">✅Ad Requested</p>
                                     {% else %}
                                         <p class="card-text" style="color: red; font-size: 20px; text-align: center;">⌛Yet To Be Requested</p>
@@ -141,10 +164,10 @@
                                     <p class="card-text"><strong>Name:</strong> {{ value[0] }}</p>
                                     <p class="card-text"><strong>Description:</strong> {{ value[2] }}</p>
                                     <p class="card-text"><strong>Category:</strong> {{ value[7] }}</p>
-                                    <p class="card-text"><strong>Sponsored by:</strong> {{ value[9] }}</p>
+                                    <p class="card-text"><strong>Sponsored by:</strong> {{ value[10] }}</p>
                                     <p class="card-text"><strong>Start Date:</strong> {{ value[5] }}</p>
                                     <p class="card-text"><strong>End Date:</strong> {{ value[6] }}</p>
-                                    {% if value[8] == "Ad Requested" %}
+                                    {% if value[9] == "Ad Requested" %}
                                         <p class="card-text">
                                             <button type="button" class="btn btn-primary disabled" style="background-color: rgba(242, 231, 161, 0.985); color: black"
                                                     data-bs-toggle="modal" data-bs-target="#adRequestModal"

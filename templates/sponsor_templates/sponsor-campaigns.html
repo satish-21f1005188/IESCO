@@ -3,14 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- <link rel="stylesheet" href="/static/style.css"> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">  
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <title>Sponsor Campaigns</title>
+    <style>
+        .body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            ;
+        }
+
+        .h2 {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .table-custom {
+            margin-top: 20px;
+            size: 15px;
+        }
+
+        .btn-group {
+            margin-right: 5px;
+        }
+
+        .stats {
+            padding-top: 20px;
+        }
+        .statistics {
+            background-color: #e9ecef; /* Light grey background */
+            padding: 20px; /* Padding inside */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin-top: 20px; /* Space above statistics */
+        }
+
+        .statistics p {
+            font-size: 1.25rem; /* Larger font for statistics */
+            font-weight: bold; /* Bold text for emphasis */
+            margin: 0; /* Remove default margin */
+        }
+    </style>
 </head>
 <body>
-    <div id="container">
-        <div id="panel">
+    <div class="container">
+        <div class="panel">
             <!-- Display Flash Messages -->
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -24,13 +72,13 @@
             {% endwith %}
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand" style="font-size:21px;" href="#">{{ sponsor_info[id][1] }}'s Dashboard</a>
+                    <a class="navbar-brand" style="font-size:20px;" href="#">{{ sponsor_info[id][1] }}'s Dashboard</strong></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        <ul class="navbar-nav" style="font-size:20px;">
-                            <li class="nav-item" style="margin-left: 200px">
+                        <ul class="navbar-nav" style="font-size:18px;">
+                            <li class="nav-item" style="margin-left: 120px">
                                 <a class="nav-link active" aria-current="page" href="/sponsor/profile/{{id}}">Profile |</a>
                             </li>
                             <li class="nav-item">
@@ -51,46 +99,80 @@
                     </div>
                 </div>
             </nav>
-            <div style="margin-top: 20px; font-size: 20px; margin-left: 10px; text-align: center;">
-                {{ sponsor_info[id][1] }}'s Campaigns
+            <div style="margin-top: 20px;  margin-left: 10px; text-align: center;">
+                <h2><b>{{ sponsor_info[id][1] }}'s Campaigns</b></h2>
                 <!-- {{campaigns_list}} -->
                 <!-- Campaigns by the sponsor -->
                 
-                <div id="dashboard-tables" style="width: 1000px;">
+                <div id="dashboard-tables" class="table-responsive" style="width: 1000px;">
                     {% if campaigns_list %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
+                    <table class="table table-hover align-middle table-custom" style="border: none;font-size:15px">
+                        <thead class="table-light">
+                            <tr style="border-bottom: 2px solid #dee2e6;">
                                     
+                                    <th scope="col">Status</th>
                                     <th scope="col">Campaign Name</th>
                                     <th scope="col">Actions</th>
                                     <th scope = "col">Manage Ad Requests</th>
+                                    <th scope="col">Visibility</th>
                                     <th scope="col">Days to go</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for key, value in campaigns_list.items() %}
-                                    {% if value[3] == 1 %}
+                                    
                                         <tr>
-                                            
-                                            <td>{{ value[0] }}</td>
-                                            <td>
+                                            <td style="border: none;">
+                                                {% if value[3] == 0 %}
+                                                    <span style="color: red;" title="Flagged">⚠️Flagged</span>
+                                                {% elif value[3] == 2 %}
+                                                    <span style="color: red;" title="Ended">&#10060;Ended</span>
+                                                
+                                                {% else %}
+                                                    <span style="color: green;" title="Active">✅Active</span>
+                                                {% endif %}
+                                            </td>
+                                            <td style="border: none;">{{ value[0] }}</td>
+                                            <td style="border: none;">
                                                 <div style="text-align: center;">
                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ sponsor_info[id][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}" data-category = "{{ value[7]}}">
                                                         View
                                                     </button>
+                                                    {% if value[3] == 1 %}
+                                                        
+                                                   
                                                     <button type="button" class="btn btn-primary" style="background-color: rgba(242, 231, 161, 0.985); color: black" data-bs-toggle="modal" data-bs-target="#editCampaignModal" data-val="{{key}}#{{value[0]}}#{{value[2]}}#{{value[3]}}#{{value[4]}}#{{value[5]}}#{{value[6]}}#{{value[7]}}">
                                                         Edit
                                                     </button>
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCampaignModal" data-id="{{ key }}" data-name="{{value[0]}}" data-description="{{ value[2] }}">
                                                         Delete/End Campaign
                                                     </button>
+                                                    {% else %}
+                                                    <button type="button" class="btn btn-primary disabled" style="background-color: rgba(242, 231, 161, 0.985); color: black" data-bs-toggle="modal" data-bs-target="#editCampaignModal" data-val="{{key}}#{{value[0]}}#{{value[2]}}#{{value[3]}}#{{value[4]}}#{{value[5]}}#{{value[6]}}#{{value[7]}}">
+                                                        Edit
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger disabled" data-bs-toggle="modal" data-bs-target="#deleteCampaignModal" data-id="{{ key }}" data-name="{{value[0]}}" data-description="{{ value[2] }}">
+                                                        Delete/End Campaign
+                                                    </button>
+                                                    {% endif %}
                                                 </div>
                                             </td>
-                                            <td>
-                                                <a href="/sponsor/manage_requests/{{key}}" class="btn btn-primary">Manage</a>
-                                            </td>
-                                            <td>
+                                            {% if value[3] == 1 %}
+                                                <td style="border: none;">
+                                                    <a href="/sponsor/manage_requests/{{key}}" class="btn btn-primary">Manage</a>
+                                                </td>
+                                            {% else %}
+                                                <td style="border: none;">
+                                                    <button type="button" class="btn btn-primary disabled">Manage</button>
+                                                </td>
+                                            {% endif %}
+                                            <td style="border: none;">
+                                                {% if value[8] == 1 %}
+                                                    <span >&#127757Public</span>
+                                                {% else %}
+                                                    <span>&#128274Private</span>
+                                                {% endif %}
+                                            <td style="border: none;">
                                                 {% if days_left_list[key] < 0 %}
                                                 <span style ="color : red;">Campaign Ended</span>
                                                 {% else %}
@@ -98,7 +180,7 @@
                                                 {% endif %}
                                             </td>
                                         </tr>
-                                    {% endif %}
+                                    
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -110,44 +192,7 @@
                 <br>
             </div>    
 
-            <!--Campaigns Flagged by the admin-->
-
-
-            <div style="margin-top: 20px; font-size: 20px; margin-left: 10px; text-align: center;">
-                <!-- <div style="align-self: center;text-align: center"> -->
-                Campaigns flagged by the admin
-                <!-- </div> -->
-                <div id="dashboard-tables" style="width: 1000px;">
-                    {% if flagged_campaigns_list %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    
-                                    <th scope="col">Campaign Name</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for key, value in campaigns_list.items() %}
-                                    {% if value[3] == 0 %}
-                                        <tr>
-                                            
-                                            <td>{{ value[0] }}</td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal" data-name="{{ value[0] }}" data-sponsor="{{ sponsor_info[id][1] }}" data-desc="{{ value[2] }}" data-status="{{ value[3] }}" data-budget="{{ value[4] }}" data-start="{{ value[5] }}" data-end="{{ value[6] }}" data-category = "{{ value[7]}}">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <h2>No Flagged Campaigns available</h2>
-                    {% endif %}
-                </div>
-            </div>
+            
             
                 <!-- View Modal -->
                 <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
@@ -202,12 +247,15 @@
                     <div class = "mb-3">
                         <label for="editCampaignCategory" class="form-label">Category</label>
                         <select class="form-select" id="editCampaignCategory" name="editCampaignCategory" required>
-                            <option selected>Choose a category</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Technology">Technology</option>
-                            <option value="Beauty & Cosmetic">Beauty & Cosmetics</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Fitness">Fitness</option>
+                            <option selected disabled>Choose a category</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Technology">Technology</option>
+                                <option value="Beauty & Cosmetic">Beauty & Cosmetics</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Fitness">Fitness</option>
+                                <option value="Food & Beverage">Food & Beverage</option>
+                                <option value = "Sports">Sports</option>
+                                <option value = "Travel">Travel</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -221,6 +269,15 @@
                     <div class="mb-3">
                         <label for="editCampaignEndDate" class="form-label">End Date</label>
                         <input type="date" class="form-control" id="editCampaignEndDate" name="editCampaignEndDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCampaignVisibility" class="form-label">Campaign Visibility</label>
+                        <select class="form-select" id="editCampaignVisibility" name="editCampaignVisibility" required>
+                            <option selected>Choose</option>
+                            <option value="Public">Public</option>
+                            <option value="Private">Private</option>
+                            
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -299,6 +356,11 @@
                 statusDot.style.color = 'green';
                 statusText.textContent = ' Active';
                 statusText.style.color = 'green';
+            } else if (status == 2) {
+                statusDot.style.display = 'inline';
+                statusDot.style.color = 'red';
+                statusText.textContent = ' Ended';
+                statusText.style.color = 'red';
             } else {
                 statusDot.style.display = 'inline';
                 statusDot.style.color = 'red';

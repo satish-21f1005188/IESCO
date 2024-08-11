@@ -23,6 +23,7 @@ class influencers(db.Model):
     category = db.Column(db.String, nullable=False)
     niche = db.Column(db.String, nullable=False)
     followers_count = db.Column(db.Integer, nullable=False)
+    earnings = db.Column(db.Integer,nullable = False,default = 0)
 
 class sponsors(db.Model):
     __tablename__ = "sponsors"
@@ -43,6 +44,8 @@ class campaigns(db.Model):
     campaign_start_date = db.Column(db.Date, nullable=False)
     campaign_end_date = db.Column(db.Date, nullable=False)
     campaign_category = db.Column(db.String)
+    # 1 for public, 0 for private
+    campaign_visibility = db.Column(db.Integer, nullable=False, default=1)
     
     
     # Relationship to Influencers and Sponsors

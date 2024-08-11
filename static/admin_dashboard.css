@@ -1,0 +1,60 @@
+.container{
+    margin-top: 20px; /* Space above container */
+    
+}
+
+.btn {
+    background-color: #007bff; /* Primary button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside buttons */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+
+.btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+.navbar {
+    background-color: #343a40; /* Dark background for navbar */
+    border-radius: 0; /* Remove rounded corners */
+}
+
+.navbar-brand {
+    color: #ffffff; /* Navbar brand color */
+}
+
+.nav-link {
+    color: #ffffff; /* Link color */
+}
+
+.nav-link:hover {
+    color: #ffd700; /* Change color on hover */
+}
+.panel {
+    background-color: #ffffff; /* White background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+    padding: 20px; /* Padding inside the panel */
+    margin-bottom: 20px; /* Space between panels */
+}
+.chart-container {
+    display: flex;
+    justify-content: center; /* Center charts */
+    align-items: center; /* Center vertically */
+    margin: 20px 0; /* Space between charts */
+}
+.statistics {
+    background-color: #e9ecef; /* Light grey background */
+    padding: 20px; /* Padding inside */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-top: 20px; /* Space above statistics */
+}
+
+.statistics p {
+    font-size: 1.25rem; /* Larger font for statistics */
+    font-weight: bold; /* Bold text for emphasis */
+    margin: 0; /* Remove default margin */
+}

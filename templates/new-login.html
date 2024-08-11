@@ -5,85 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
     <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- MDB CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            margin-top: 100px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .login-container h3 {
+            margin-bottom: 20px;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-         <!-- Display Flash Messages -->
-         {% with messages = get_flashed_messages(with_categories=true) %}
-         {% if messages %}
-             {% for category, message in messages %}
-                 <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                     {{ message }}
-                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                 </div>
-             {% endfor %}
-         {% endif %}
-         {% endwith %}
         <div class="row justify-content-center">
-            <div class="col-md-3">
-                <h3 class="text-center mt-5">Login</h3>
-                <br><br>
+            <div class="col-md-4 login-container">
+                <!-- Display Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <h3 class="text-center">Login</h3>
                 <form method="POST" action="/login">
                     <!-- Email input -->
-                    <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="text" id="form2Example1" class="form-control" name="uname" />
-                        <label class="form-label" for="form2Example1">Username</label>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control" name="uname" required>
                     </div>
 
                     <!-- Password input -->
-                    <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="password" id="form2Example2" class="form-control" name="pwd" />
-                        <label class="form-label" for="form2Example2">Password</label>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" name="pwd" required>
                     </div>
 
-                    <!-- 2 column grid layout for inline styling -->
-                    <div class="row mb-4">
-                        <div class="col d-flex justify-content-center">
-                            <!-- Checkbox -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                                <label class="form-check-label" for="form2Example31"> Remember me </label>
-                            </div>
+                    <!-- Remember me and Forgot password links -->
+                    <div class="form-row mb-4">
+                        <div class="col d-flex align-items-center">
+                            <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+                            <label class="form-check-label" for="rememberMe"> Remember me </label>
                         </div>
-
-                        <div class="col">
-                            <!-- Simple link -->
+                        <div class="col text-right">
                             <a href="#!">Forgot password?</a>
                         </div>
                     </div>
 
                     <!-- Submit button -->
-                    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
+                    <button type="submit" class="btn btn-primary btn-block">Sign in</button>
 
                     <!-- Register buttons -->
-                    <div class="text-center">
+                    <div class="text-center mt-3">
                         <p>Not a member?</p>
                         <p>If you're an Influencer <a href="/inf_register">Click here</a></p>
                         <p>If you're a Sponsor <a href="/spo_register">Click here</a></p>
                     </div>
                 </form>
-                
-                <div>
-                    
-                    <!-- {% if msg %}
-                        {% if msg == "failed" %}
-                            <div class="alert alert-danger" role="alert">
-                                Invalid Username or Password.
-                            </div>
-                        {% endif %}
-                    {% endif %} -->
-                    {% if msg == "failed" %}
-                        <div class="alert alert-danger" role="alert">
-                            <p>Login failed. Please check your credentials.</p>
-                        </div>
-                    {% endif %}
-                </div>  
-                </div>
+
+                <!-- Error message -->
+                {% if msg == "failed" %}
+                    <div class="alert alert-danger" role="alert">
+                        <p>Login failed. Please check your credentials.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -92,7 +95,5 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <!-- MDB JS -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>
 </body>
 </html>

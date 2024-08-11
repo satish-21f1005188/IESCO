@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/admin_dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px; /* Set the same height for all charts */
+        }
+
+        #userRolesChart,
+        #campaignChart,
+        #campaignCategoryChart {
+            max-height: 100%; /* Ensure charts take full height */
+            width: auto;      /* Maintain aspect ratio */
+        }
+
+
+        .statistics {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .statistics h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .row h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel">
+            <!-- Display Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" style="font-size: 21px;" href="#">Admin's Dashboard</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                        <ul class="navbar-nav" style="font-size: 20px;">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/all_users">All Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/all_campaigns">All Campaigns</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Stats</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/login">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="statistics">
+                <h2>Statistics</h2>
+                <div class="row">
+                    <div class="col">
+                        <p>Total Active Users: <strong>{{ total_active_users }}</strong></p>
+                    </div>
+                    <div class="col">
+                        <p>Total Active Campaigns: <strong>{{ total_active_campaigns }}</strong></p>
+                    </div>
+                    <div class="col">
+                        <p>Influencer/Sponsor Ratio: <strong>{{ inf_spo_ratio }}</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style = "margin-top:20px">
+                <div class="col">
+                    <h4>👥 User Roles</h4>
+                    <div class="chart-container">
+                        <canvas id="userRolesChart"></canvas>
+                    </div>
+                </div>
+                <div class="col">
+                    <h4> 📊Campaign Status</h4>
+                    <div class="chart-container">
+                        <canvas id="campaignChart"></canvas>
+                    </div>
+                </div>
+                <div class="col">
+                    <h4> 📈Campaigns by Category</h4>
+                    <div class="chart-container">
+                        <canvas id="campaignCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of container -->
+
+    <!-- Chart.js script for user data pie chart -->
+    <script>
+        const userData = JSON.parse('{{ user_data | tojson }}');
+        const roleLabels = {1: 'Influencer', 2: 'Sponsor'};
+        const labels = userData.map(item => roleLabels[item.role] || `Role ${item.role}`);
+        const counts = userData.map(item => item.count);
+
+        const ctx = document.getElementById('userRolesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '',
+                    data: counts,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Chart.js script for campaign data -->
+    <script>
+        const campaignData = JSON.parse('{{ campaign_data | tojson }}');
+        const statusLabels = {0: 'Flagged', 1: 'Active', 2 : 'Ended'};
+        const labels1 = campaignData.map(item => statusLabels[item.status] || ` ${item.status}`);
+        const counts1 = campaignData.map(item => item.count);
+
+        const ctx1 = document.getElementById('campaignChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: labels1,
+                datasets: [{
+                    label: 'Number of Campaigns',
+                    data: counts1,
+                    backgroundColor: ['#FF6384', '#36A2EB'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Count'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Campaign Status'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Campaigns by category data -->
+    <script>
+        const campaignCategoryData = JSON.parse('{{ campaign_category_data | tojson }}');
+        const categoryLabels = campaignCategoryData.map(item => item.category);
+        const categoryCounts = campaignCategoryData.map(item => item.count);
+
+        const ctx2 = document.getElementById('campaignCategoryChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    label: 'Number of Campaigns',
+                    data: categoryCounts,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFA500', '#FFCE56', '#36A2EB', '#FFDAB9'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+  
+</body>
+</html>
