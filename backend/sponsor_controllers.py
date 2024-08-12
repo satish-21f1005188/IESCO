@@ -95,8 +95,13 @@ def edit_campaign(campaign_id):
             campaign.campaign_visibility = 1
         else:
             campaign.campaign_visibility = 0
-        
-
+       
+        if campaign_start_date > campaign_end_date :
+                flash("Start date cannot be greater than end date",'danger')
+                return redirect(url_for('edit_campaign',campaign_id=campaign_id))
+        elif campaign_start_date < datetime.now().date():
+                flash("Start date cannot be less than current date",'danger')
+                return redirect(url_for('edit_campaign',campaign_id=campaign_id))
         db.session.commit()
         flash("Campaign updated successfully",'success')
         return redirect(url_for('sponsor_campaigns',user_id=campaign.sponsor_id))
@@ -123,6 +128,9 @@ def create_campaign(sponsor_id):
             db.session.add(new_campaign)
             if campaign_start_date > campaign_end_date:
                 flash("Start date cannot be greater than end date",'danger')
+                return redirect(url_for('new_campaign',user_id=sponsor_id))
+            elif campaign_start_date < datetime.now().date():
+                flash("Start date cannot be less than current date",'danger')
                 return redirect(url_for('new_campaign',user_id=sponsor_id))
             if campaign_visibility == 'Public':
                 new_campaign.campaign_visibility = 1
@@ -191,10 +199,11 @@ def get_influencers():
     for influencer in influencers_list:
         if influencer.id not in influencers_dict.keys():
             user_table_data = user_table.query.filter_by(id = influencer.id).first()
-            influencers_dict[influencer.id] = []
-            influencers_dict[influencer.id].append(user_table_data.full_name)
-            influencers_dict[influencer.id].extend([influencer.category,influencer.niche,influencer.followers_count])
-            influencers_dict[influencer.id].append(user_table_data.status)
+            if user_table_data.status == 1:
+                influencers_dict[influencer.id] = []
+                influencers_dict[influencer.id].append(user_table_data.full_name)
+                influencers_dict[influencer.id].extend([influencer.category,influencer.niche,influencer.followers_count])
+                influencers_dict[influencer.id].append(user_table_data.status)
     return dict(influencers_dict)
             
 # search functionalities functions
@@ -222,11 +231,10 @@ def search_influencers(sponsor_id):
 
         query = db.session.query(user_table, influencers).outerjoin(influencers)
 
-        if name:
-            query = query.filter(user_table.full_name.ilike(f'%{name}%'))
+       
         
         if category:
-            query = query.filter(influencers.category.ilike(f'%{category}%'))
+            query = query.filter(influencers.category.ilike(f'%{category}%'),user_table.status == 1)
 
         results = query.all()
 
