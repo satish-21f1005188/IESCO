@@ -2,6 +2,7 @@ from flask import Flask,render_template,session
 from backend.models import *
 
 
+
 def init_app():
     app = Flask(__name__)
     app.debug = True
@@ -21,4 +22,4 @@ from backend.manage_ad_requests import *
 from backend.influencer_controllers import *
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=9000)

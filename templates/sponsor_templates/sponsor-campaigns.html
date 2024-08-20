@@ -4,55 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="/static/style.css"> -->
+    <link rel = "stylesheet" href = "/static/sponsor.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">  
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <title>Sponsor Campaigns</title>
     <style>
-        .body {
-            background-color: #f8f9fa;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .panel {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            ;
-        }
-
-        .h2 {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .table-custom {
-            margin-top: 20px;
-            size: 15px;
-        }
-
-        .btn-group {
-            margin-right: 5px;
-        }
-
-        .stats {
-            padding-top: 20px;
-        }
-        .statistics {
-            background-color: #e9ecef; /* Light grey background */
-            padding: 20px; /* Padding inside */
-            border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            margin-top: 20px; /* Space above statistics */
-        }
-
-        .statistics p {
-            font-size: 1.25rem; /* Larger font for statistics */
-            font-weight: bold; /* Bold text for emphasis */
-            margin: 0; /* Remove default margin */
+        body{
+            background-color: #e6d8d8;
         }
     </style>
 </head>
@@ -78,7 +36,7 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav" style="font-size:18px;">
-                            <li class="nav-item" style="margin-left: 120px">
+                            <li class="nav-item" style="margin-left: 200px">
                                 <a class="nav-link active" aria-current="page" href="/sponsor/profile/{{id}}">Profile |</a>
                             </li>
                             <li class="nav-item">
@@ -141,7 +99,7 @@
                                                     {% if value[3] == 1 %}
                                                         
                                                    
-                                                    <button type="button" class="btn btn-primary" style="background-color: rgba(242, 231, 161, 0.985); color: black" data-bs-toggle="modal" data-bs-target="#editCampaignModal" data-val="{{key}}#{{value[0]}}#{{value[2]}}#{{value[3]}}#{{value[4]}}#{{value[5]}}#{{value[6]}}#{{value[7]}}">
+                                                    <button type="button" class="btn btn-primary" style="background-color: rgba(242, 231, 161, 0.985); color: black" data-bs-toggle="modal" data-bs-target="#editCampaignModal" data-val="{{key}}#{{value[0]}}#{{value[2]}}#{{value[3]}}#{{value[4]}}#{{value[5]}}#{{value[6]}}#{{value[7]}}#value[8]">
                                                         Edit
                                                     </button>
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCampaignModal" data-id="{{ key }}" data-name="{{value[0]}}" data-description="{{ value[2] }}">
@@ -151,7 +109,7 @@
                                                     <button type="button" class="btn btn-primary disabled" style="background-color: rgba(242, 231, 161, 0.985); color: black" data-bs-toggle="modal" data-bs-target="#editCampaignModal" data-val="{{key}}#{{value[0]}}#{{value[2]}}#{{value[3]}}#{{value[4]}}#{{value[5]}}#{{value[6]}}#{{value[7]}}">
                                                         Edit
                                                     </button>
-                                                    <button type="button" class="btn btn-danger disabled" data-bs-toggle="modal" data-bs-target="#deleteCampaignModal" data-id="{{ key }}" data-name="{{value[0]}}" data-description="{{ value[2] }}">
+                                                    <button type="button" class="btn btn-danger " data-bs-toggle="modal" data-bs-target="#deleteCampaignModal" data-id="{{ key }}" data-name="{{value[0]}}" data-description="{{ value[2] }}">
                                                         Delete/End Campaign
                                                     </button>
                                                     {% endif %}
@@ -407,6 +365,7 @@
         var start_date = values[5];
         var end_date = values[6];
         var category = values[7];
+        var visibility = values[8];
         console.log(values);
 
         document.getElementById('editCampaignId').value = campaignId;
@@ -416,6 +375,12 @@
         document.getElementById('editCampaignBudget').value = budget;
         document.getElementById('editCampaignStartDate').value = start_date;
         document.getElementById('editCampaignEndDate').value = end_date;
+        if( visibility == 1){
+            document.getElementById('editCampaignVisibility').value = "Public";
+        }
+        else{
+            document.getElementById('editCampaignVisibility').value = "Private";
+        }
 
         document.getElementById('editCampaignForm').action = '/sponsor/edit_campaign/' + campaignId;
     });

@@ -1,7 +1,6 @@
-body{
+body {
     background-color: #e6d8d8 !important;
 }
-
 .container{
     margin-top: 20px; /* Space above container */
     
@@ -62,4 +61,22 @@ body{
     font-size: 1.25rem; /* Larger font for statistics */
     font-weight: bold; /* Bold text for emphasis */
     margin: 0; /* Remove default margin */
+}
+.table-custom {
+    margin-top: 20px;
+}
+.btn-group {
+    margin-right: 5px;
+}
+.table th,
+.table td {
+text-align: left; /* or center, as per your design */
+}
+
+.table th {
+width: 15%; /* Set widths according to your layout */
+}
+
+.table td {
+width: 15%; /* Ensure this matches the header widths */
 }

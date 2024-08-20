@@ -43,7 +43,7 @@ def user_login():
             
             # If user not found or roles are not defined, handle login failure
             else:
-                msg = 'Login failed. Please check your credentials.'
+                flash("Login Credentials is Wrong. Kindly enter correct details")
                 return render_template("new-login.html", msg="failed")
 
     if request.method == "GET":
@@ -95,6 +95,10 @@ def spo_signup():
             pwd =  request.form.get("pwd")
             usr = user_table.query.filter_by(user_name = uname).first()
             if not usr:
+                    if len(uname) >= 10:
+                        flash("username length should be less than 10",'danger')
+                        return redirect(url_for('spo_signup'))
+                    
                     new_user = user_table(user_name = uname,email = email,full_name = fname,pwd = pwd,role = 2)
                     db.session.add(new_user)
                     db.session.commit()

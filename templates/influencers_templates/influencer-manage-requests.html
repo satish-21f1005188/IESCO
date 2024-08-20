@@ -4,66 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Influencer Managing Ad Requests</title>
-    <!-- <link rel = "stylesheet" href = "/static/admin_dashboard.css"> -->
+    <link rel = "stylesheet" href = "/static/influencer.css">
+    
     <style>
-        .body {
-            background-color: #f8f9fa;
+        body {
+            background-color: #e6d8d8 !important; /* Changed to a dark gray color */
         }
-        .container {
-            padding: 20px;
-        }
-        .panel {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            
-        }
-        .h2 {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .table-custom {
-            margin-top: 20px;
-        }
-        .btn-group {
-            margin-right: 5px;
-        }
-        .table th,
-.table td {
-    text-align: left; /* or center, as per your design */
-}
-
-.table th {
-    width: 15%; /* Set widths according to your layout */
-}
-
-.table td {
-    width: 15%; /* Ensure this matches the header widths */
-}
-.navbar  {
-    background-color: #999da1; /* Dark background for navbar */
-    border-radius: 0; /* Remove rounded corners */
-}
-
-.navbar-brand {
-    color: #ffffff; /* Navbar brand color */
-}
-
-.nav-link {
-    color: #ffffff; /* Link color */
-}
-
-.nav-link:hover {
-    color: #ffd700; /* Change color on hover */
-}
 
     </style>
-    <link rel="stylesheet" href="/static/style.css">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">  
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<body>
+<body >
     <div class = "container">
         <div class = "panel">
             <!--flashing messages-->
@@ -79,13 +32,13 @@
             {% endwith %}
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand" style="font-size:21px;" href="#">{{ influencer_info[id][0] }}'s Page</a>
+                    <a class="navbar-brand" style="font-size:20px;" href="#">{{ influencer_info[id][0] }}'s Page</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        <ul class="navbar-nav" style="font-size:20px;">
-                            <li class="nav-item" style = "margin-left : 280px">
+                        <ul class="navbar-nav" style="font-size:18px;">
+                            <li class="nav-item" style = "margin-left : 290px">
                                 <a class="nav-link active" aria-current="page" href="/influencer/profile/{{id}}">Profile |</a>
                             </li>
                             <li class="nav-item">
